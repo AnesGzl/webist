@@ -8,7 +8,7 @@ use App\Models\Student;
 use Illuminate\Support\Carbon ;
 use Livewire\Component;
 
-class Studentssortie extends Component
+class Studentsortie extends Component
 {
 
     public Student $student; //from the blade

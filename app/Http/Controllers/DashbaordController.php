@@ -39,17 +39,13 @@ class DashbaordController extends Controller
                       ->from('sections')
                       ->where('officer_id', $officer->id);
             })->orderBy('section_id', 'ASC')->get();
-
-
-
-            return view('weekends', [
-                'isCC' => $isCC,
-                'officer' => $officer,
-                'companies' => $companies,
-                'students' => $students
-            ]);
         }
-
-        return view('weekends');
+        return view('weekends', [
+            'isCC' => $isCC,
+            'officer' => $officer,
+            'companies' => $companies,
+            'students' => $students
+        ]);
+       
     }
 }

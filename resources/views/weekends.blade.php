@@ -1,4 +1,4 @@
-<x-base title="weekends">
+<x-base  title="weekends">
 
     <x-slot:css>
         <link rel="stylesheet" href="/css/weekend.css">

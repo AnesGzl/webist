@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ListeRdvController;
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\DashbaordController;
@@ -12,9 +14,29 @@ use App\Models\Officer;
 use App\Models\Section;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+Route::get('/infermerie/fiche', function () {
+return view('infermerie/fiche');
+});
+Route::get('/infermerie/compt', function () {
+    return view('infermerie/compt');
+    });
+    Route::get('/infermerie/liste_convoncu', function () {
+        return view('infermerie/liste_convoncu');
+        });
+        Route::get('/infermerie/liste_exemption', function () {
+            return view('infermerie/liste_exemption');
+            });
+            Route::get('/infermerie/liste_patient', function () {
+                return view('infermerie/liste_patient');
+                });
+                Route::get('/infermerie/listeRendezvous',[ListeRdvController::class,'create']);
+                Route::post('/infermerie/ajouter_rdv', [ListeRdvController::class, 'store'])->name('liste_rdv.store');
+Route::get("test1",function(){
 
-
+    return dd(Hash::make("123456789"));
+});
 Route::controller(DashbaordController::class)
     ->prefix('{id}')
     ->group(
