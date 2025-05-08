@@ -1,76 +1,100 @@
 <x-infermerie css='liste_rendezvous'>
-    <form action=""><div class="ordree" id="hidden-div">
-      <a href="#"><i class="fa-solid fa-x"></i></a>
-      <div class="contenu"><p>À: <div class="ordree01"><input type="text" name="" id=""></div></p><hr>
-    <p>Objet: <div class="ordree02"><input type="text" name="" id=""></div></p>
-    <hr>
-    <div class="ordree03">
-      <button>convocation par le psychologue</button>
-      <button>vaccin</button>
-      <button>presence secours</button>
-      <button>consultation</button>
-    </div>
-    </div>
-      <div class="envoi">
-       <button type="submit"> <i class="fa-solid fa-paper-plane"></i></button><input type="text" class="envoi_input">
-      </div>
-    </div></form>
+    <div class="container mx-auto">
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Liste des rendez-vous</h1>
+                    <a href="{{ route('liste_rdv.create') }}"
+                       class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600">
+                        Nouveau rendez-vous
+                    </a>
+                </div>
 
+                <!-- Filtres -->
+                <div class="mb-6">
+                    <form method="GET" action="{{ route('liste_rdv.index') }}" class="flex gap-4">
+                        <div class="flex-1">
+                            <select name="motif"
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
+                                    onchange="this.form.submit()">
+                                <option value="">Tous les motifs</option>
+                                <option value="consultation" {{ request('motif') == 'consultation' ? 'selected' : '' }}>Consultation</option>
+                                <option value="urgences" {{ request('motif') == 'urgences' ? 'selected' : '' }}>Urgences</option>
+                            </select>
+                        </div>
 
-    <div class="parent">
-        <form method="POST" action="{{ route('liste_rdv.store') }}" class="recherch">
-            @csrf
+                        <div class="flex-1">
+                            <input type="date"
+                                   name="date"
+                                   value="{{ request('date', now()->format('Y-m-d')) }}"
+                                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
+                                   onchange="this.form.submit()">
+                        </div>
+                    </form>
+                </div>
 
-            <div>
-                <label for="matricule">Matricule</label>
-                <input type="number" id="matricule" name="matricule" required minlength="5" maxlength="5">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Matricule</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nom</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Prénom</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Section</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Motif</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Service</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-800">
+                            @foreach($rendezvous as $rdv)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                        {{ $rdv->matricule }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                        {{ $rdv->nom }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                        {{ $rdv->prenom }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                        {{ $rdv->section }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <span class="px-2 py-1 text-xs rounded-full {{ $rdv->motif == 'urgences' ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300' }}">
+                                            {{ $rdv->motif }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                        {{ $rdv->service }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                        {{ $rdv->date }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                        <form action="{{ route('liste_rdv.destroy') }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="id" value="{{ $rdv->id }}">
+                                            <button type="submit"
+                                                    class="text-red-600 hover:text-red-900 dark:text-red-500 dark:hover:text-red-400"
+                                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce rendez-vous ?')">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
-                <label for="motif">Motif</label>
-                <select name="motif" id="motif" required>
-                    <option value="consultation">Consultation</option>
-                    <option value="urgences">Urgences</option>
-                </select>
-
-                <label for="service">Service médical</label>
-                <select name="service" id="service" required>
-                    <option value="medecine_generale">Médecine Générale</option>
-                    <option value="cardiologie">Cardiologie</option>
-                    <option value="pneumologie">Pneumologie</option>
-                    <option value="gastroenterologie">Gastro-entérologie</option>
-                    <option value="chirurgie_generale">Chirurgie Générale</option>
-                    <option value="orthopedie">Orthopédie</option>
-                    <option value="neurologie">Neurologie</option>
-                    <option value="dermatologie">Dermatologie</option>
-                    <option value="gynecologie">Gynécologie</option>
-                    <option value="urologie">Urologie</option>
-                    <option value="ophtalmologie">Ophtalmologie</option>
-                    <option value="orl">ORL (Oto-Rhino-Laryngologie)</option>
-                    <option value="psychiatrie">Psychiatrie</option>
-                    <option value="radiologie">Radiologie</option>
-                    <option value="anesthesie">Anesthésie</option>
-                    <option value="reanimation">Réanimation</option>
-                </select>
-
-                <label for="date">Date</label>
-                <input type="date" id="date" name="date" required>
-
-                <button type="submit">Envoyer</button>
+                <div class="mt-4">
+                    {{ $rendezvous->links() }}
+                </div>
             </div>
-        </form>
+        </div>
     </div>
-
-
-        <div class="espace"> </div>
-        <div class="tableau">
-            <table>
-              <tr >
-                <th>matricule</th>
-                <th>nom</th>
-                <th>prénom</th>
-                <th>motif</th>
-                <th>service</th>
-                <th>date</th>
-              </tr>
-
-      </div>
 </x-infermerie>

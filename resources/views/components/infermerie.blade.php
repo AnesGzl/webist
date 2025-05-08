@@ -1,44 +1,86 @@
 @props(['css'])
 <!DOCTYPE html>
-<html lang="en" mode="dark+-">
+<html lang="en" class="h-full" x-data :class="{ 'dark': localStorage.getItem('color-theme') === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches) }">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1024">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="/logo.png">
-    <title>wibist:{{$css}} </title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>wibist:{{$css}}</title>
+
+    <!-- Theme initialization -->
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
+    <!-- Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="/css/{{$css}}.css">
 
+    <!-- Scripts -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="{{ asset('js/theme.js') }}" defer></script>
 </head>
-<body>
-  <div class="side_bar">
-    <img src="/logo.png" alt="">
-       <div class="item3 ss"><a href="/infermerie/listeRendezvous"><i class="fa-solid fa-bell"></i> rendez vous</a></div>
+<body class="h-full bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white dark:bg-gray-800 border-r dark:border-gray-700 fixed h-full shadow-lg transition-colors duration-200">
+            <div class="flex items-center justify-center p-4 border-b dark:border-gray-700">
+                <img src="/logo.png" alt="Logo" class="h-8">
+            </div>
 
-   <div class="item4 ss"><a href="/infermerie/liste_patient"><i class="fa-solid fa-rectangle-list"></i>liste des patients </a></div>
-   <div class="item5 ss"><a href="/infermerie/compt"><i class="fa-regular fa-heart"></i>compte rendu medical</a></div>
-   <div class="item6 ss"><a href="/infermerie/liste_convoncu"><i class="fa-solid fa-magnifying-glass"></i>liste convoncu</a></div>
-  <div class="item7 ss"><a href="/infermerie/liste_exemption"><i class="fa-regular fa-file-lines"></i>exemption et convalisence</a></div>
-  <div class="item8 ss"><a href="/infermerie/fiche" ><i class="fa-regular fa-rectangle-list"></i>fiche medical</a></div>
-    <div  class="item9 ss"><a  href="#hidden-div" class="clickable-div" id="toggleButton"><i class="fa-solid fa-plus"></i>convocation d'un éleve</a></div>
-    <div class="item2 ss"><a href="/projet brigade/parametre"><i class="fa-solid fa-gear"></i>paramètre</a></div>
+            <nav class="p-4 space-y-2">
+                @include('components.sidebar-menu')
+            </nav>
+        </aside>
 
-    <div class="item1 ss"><a href="/projet brigade/login.html"><i class="fa-solid fa-arrow-right-from-bracket"></i>déconnexion</a></div>
+        <!-- Main Content -->
+        <div class="ml-64 flex-1">
+            <!-- Top Navigation -->
+            <header class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 h-16 fixed w-full z-20 transition-colors duration-200">
+                @include('components.header')
+            </header>
 
+            <!-- Main Content Area -->
+            <main class="pt-16 p-6">
+                <!-- Flash Messages -->
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
+                    @if(session('success'))
+                        <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 dark:bg-green-900/20 dark:text-green-300 transition-colors duration-200" role="alert">
+                            <div class="flex items-center">
+                                <div class="py-1">
+                                    <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <div>{{ session('success') }}</div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        @foreach($errors->all() as $error)
+                            <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 dark:bg-red-900/20 dark:text-red-300 transition-colors duration-200" role="alert">
+                                <div class="flex items-center">
+                                    <div class="py-1">
+                                        <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <div>{{ $error }}</div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+
+                {{ $slot }}
+            </main>
+        </div>
     </div>
-    <nav >
-
-        <img src="/profile.jpg" alt="">
-        <div class="nom_utilisateure"><p></p></div>
-        <a href=""><i class="fa-regular fa-sun"></i></a>
-        <x-notification />
-    </nav>
-    {{$slot}}
-
-
 </body>
-<script src="{{ asset('js/notification.js') }}"></script>
-
 </html>

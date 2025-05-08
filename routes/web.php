@@ -1,87 +1,68 @@
 <?php
-
-use App\Http\Controllers\ListeRdvController;
-
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CarController;
-use App\Http\Controllers\DashbaordController;
-use App\Http\Controllers\IndexController;
-use App\Http\Controllers\PostsController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\StudentsController;
-use App\Http\Middleware\IsAdmin;
-use App\Models\Officer;
-use App\Models\Section;
-use App\Models\Student;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
-Route::get('/infermerie/fiche', function () {
-return view('infermerie/fiche');
-});
-Route::get('/infermerie/compt', function () {
-    return view('infermerie/compt');
-    });
-    Route::get('/infermerie/liste_convoncu', function () {
-        return view('infermerie/liste_convoncu');
-        });
-        Route::get('/infermerie/liste_exemption', function () {
-            return view('infermerie/liste_exemption');
-            });
-            Route::get('/infermerie/liste_patient', function () {
-                return view('infermerie/liste_patient');
-                });
-                Route::get('/infermerie/listeRendezvous',[ListeRdvController::class,'create']);
-                Route::post('/infermerie/ajouter_rdv', [ListeRdvController::class, 'store'])->name('liste_rdv.store');
-Route::get("test1",function(){
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConvoncuController;
+use App\Http\Controllers\ListeRdvController;
+use App\Http\Controllers\ExemptionController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\FicheController;
+// Routes de connexion
+Route::get('/', [AuthController::class, 'index'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+
+// Route de déconnexion (POST uniquement)
+Route::post('/logout', action: [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+// Routes authentifiées
+Route::get('/infermerie/compt', fn() => view('infermerie.compt'))
+    ->name('compt')->middleware('auth');
+
+Route::get('/infermerie/liste_convoncu', [ConvoncuController::class, 'show'])
+    ->name('liste_convoncu')->middleware('auth');
+
+Route::get('/infermerie/CreateRendezvous', [ListeRdvController::class, 'create'])
+    ->name('liste_rdv.create')->middleware('auth');
+
+Route::get('/infermerie/listeRendezvous', [ListeRdvController::class, 'index'])
+    ->name('liste_rdv.index')->middleware('auth');
+
+Route::post('/infermerie/listeRdv', [ListeRdvController::class, 'store'])
+    ->name('liste_rdv.store')->middleware('auth');
+
+Route::delete('/infermerie/listeRendezvous', [ListeRdvController::class, 'destroy'])
+    ->name('liste_rdv.destroy')->middleware('auth');
+
+Route::get('/infermerie/liste_exemption', [ExemptionController::class, 'index'])
+    ->name('exemptions.index')->middleware('auth');
+
+Route::post('/infermerie/liste_exemption', [ExemptionController::class, 'store'])
+    ->name('exemptions.store')->middleware('auth');
+
+Route::get('/infermerie/create_exemption', [ExemptionController::class, 'create'])
+    ->name('exemptions.create')->middleware('auth');
+
+Route::get('/infermerie/liste_patient', [PatientController::class, 'index'])
+    ->name('patients.index')->middleware('auth');
+
+Route::post('/patients/{id}/valider', [PatientController::class, 'valider'])
+    ->name('patients.valider')->middleware('auth');
+
+Route::get('/fiche/{matricule}', [FicheController::class, 'show'])
+    ->name('fiche.show')->middleware('auth');
+
+Route::put('/fiche/{matricule}', [ConvoncuController::class, 'update'])
+    ->name('fiche.update')->middleware('auth');
+
+
+
+
+
+                Route::get("test1",function(){
 
     return dd(Hash::make("123456789"));
 });
-Route::controller(DashbaordController::class)
-    ->prefix('{id}')
-    ->group(
-        function () {
-
-            Route::get("principale", "principale")->name("principale");
-            Route::get("cons", "cons")->name("cons");
-            Route::get("parametre", "parametre")->name("parametre");
-            // Route::get("logout", "logout")->name("logout");
-            Route::get("weekends", "weekends")->name("weekends");
-            Route::get("infermerie", "infermerie")->name("infermerie");
-        }
-    );
-    Route::get('test', function () {
 
 
 
-        $sections = Section::get();
 
 
-
-        foreach ($sections as $section) {
-            Student::factory()->count(20)->create([
-                'section_id' => $section->id,
-            ]);
-        }
-
-
-        return "Done!";
-    });
-
-
-
-Route::controller(AuthController::class)->group(
-    function () {
-        Route::get("showLoginForm", "showLoginForm")->name("showLoginForm");
-
-
-        Route::post("login", "login")->name("login");
-        Route::get("/logout", "logout")->name("logout");
-    }
-
-);
-
-
-Route::get("", function () {
-    return  view("index");
-});

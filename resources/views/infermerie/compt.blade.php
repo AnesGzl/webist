@@ -1,40 +1,46 @@
 <x-infermerie css='compt'>
-    <form action="">
-        <div class="ordree" id="hidden-div">
-          <a href="#"><i class="fa-solid fa-x"></i></a>
-          <div class="contenu"><p>À: <div class="ordree01"><input type="text" name="" id=""></div></p><hr>
-        <p>Objet: <div class="ordree02"><input type="text" name="" id=""></div></p>
-        <hr>
-        <div class="ordree03">
-          <button>convocation par le psychologue</button>
-          <button>vaccin</button>
-          <button>presence secours</button>
-          <button>consultation</button>
-        </div>
-        </div>
-          <div class="envoi">
-           <button type="submit"> <i class="fa-solid fa-paper-plane"></i></button><input type="text" class="envoi_input">
-          </div>
-        </div>
-      </form>
+    <div class="container mx-auto">
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+            <div class="p-6">
+                <!-- En-tête -->
+                <div class="text-center space-y-2 mb-8">
+                    <p class="text-lg font-semibold text-gray-800 dark:text-gray-200">الــجمــهــوريــــــــة الجــــزائــريـــــــة الــديــمــقـراطيـــــــة الــــشعبيــــــة</p>
+                    <div class="space-y-2 text-gray-700 dark:text-gray-300">
+                        <p>وزارة الـدفـــــــاع الوطنــــــــي</p>
+                        <p>أركـــــــــــــــــــــــــــــــــــــــان</p>
+                        <p>الجيـش الوطـــــني الشــــــعبـي</p>
+                        <p>المدرسـة الوطنية التحــضيريـة</p>
+                        <p>لــدراســــــــــات المهـنـــــــدس</p>
+                        <p>بــــــــــــــــاجي مختــــــــــــــار</p>
+                        <p>قـســـــــــــــــم الـتعـــليـــــــــــم</p>
+                    </div>
+                </div>
 
-      <div class="parent">
-        <div class="pro">
-          <img src="/profile.jpg" alt="photo">
-          <div class="nom aa"><label >nom:</label> <p></p></div>
-          <div class="prénom aa"><label >prénom:</label> <p></p></div>
-          <div class="matricule aa"><label >matricule:</label> <p></p></div>
-          <div class="section aa"><label >section:</label> <p></p></div>
-        </div>
-        <div class="kha"></div>
-        <div class="evo">
-          <form action="">
-              <h1 >compte rendu medicale</h1>
-              <label class="ll" for="mm">avis de médecin général:</label>
-              <textarea name="" id="mm" cols="100" rows="20">entrez votre Diagnostic......</textarea> <br><br>
-              <input type="submit" value="envoyer"><br> <br>
-          </form>
-        </div>
-      </div>  
+                <!-- Recherche -->
+                <div class="mb-8">
+                    <form action="" class="flex items-center space-x-4">
+                        <input type="text"
+                               id="recherch"
+                               name="recherch"
+                               placeholder="Rechercher un étudiant"
+                               class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300">
+                        <button type="submit"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </form>
+                </div>
 
+                <!-- Compte Rendu -->
+                <div class="space-y-6">
+                    <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Votre avis</h1>
+                    <textarea
+                        name="avismed"
+                        rows="10"
+                        placeholder="Entrez votre avis..."
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
 </x-infermerie>

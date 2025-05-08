@@ -1,132 +1,56 @@
 <x-infermerie css='liste_exemption'>
-    <form action="">
-      <div class="ordree" id="hidden-div">
-        <a href="#"><i class="fa-solid fa-x"></i></a>
-        <div class="contenu"><p>À: <div class="ordree01"><input type="text" name="" id=""></div></p><hr>
-      <p>Objet: <div class="ordree02"><input type="text" name="" id=""></div></p>
-      <hr>
-      <div class="ordree03">
-        <button>convocation par le psychologue</button>
-        <button>vaccin</button>
-        <button>presence secours</button>
-        <button>consultation</button>
-      </div>
-      </div>
-        <div class="envoi">
-         <button type="submit"> <i class="fa-solid fa-paper-plane"></i></button><input type="text" class="envoi_input">
-        </div>
-      </div>
-    </form>
+    <div class="container mx-auto">
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+            <div class="p-6">
+            <!-- Liste des exemptions -->
+            <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+                <div class="p-6">
+                    <form method="GET" action="{{ route('exemptions.index') }}" class="mb-6 flex items-center gap-4">
+                        <label class="text-sm text-gray-700 dark:text-gray-200">
+                            Date début:
+                            <input type="date" name="date_debut" value="{{ request('date_debut') }}" class="ml-2 rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                        </label>
+                        <label class="text-sm text-gray-700 dark:text-gray-200">
+                            Date fin:
+                            <input type="date" name="date_fin" value="{{ request('date_fin') }}" class="ml-2 rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                        </label>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Filtrer</button>
+                        <a href="{{ route('exemptions.index') }}" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Réinitialiser</a>
+                    </form>
 
-
-      <div class="parent">
-            <form method="post" action="traitement.php" class="recherch">
-
-          <div >
-
-            <label for="matricule">matricule</label>
-
-
-            <input type="number" id="matricule" name="matricule">
-
-
-            <label for="date">date</label>
-
-
-
-            <input  type="date" id="date" name="date">
-
-            <label for="motif">motif</label>
-
-
-            <select name="motif" id="motif">
-             <option value="">un arret de travail</option>
-             <option value="">une exemption d'effortphysique</option>
-              <option value="" >une exemption de rasage de barbe</option>
-              <option value="" >une exemption du porte de rangers</option>
-              <option value="" >une prolongation de son arret de travail</option>
-              <option value="" >une reprise de travail</option>
-            </select>
-
-
-            <button type="submit">envoyer</button>
-          </div>
-        </form>
-        <div class="espace"> </div>
-        <div class="tableau">
-            <table>
-              <tr >
-                <th>matricule</th>
-                <th>nom</th>
-                <th>prénom</th>
-                <th>motif</th>
-                <th>date</th>
-              </tr>
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Liste des exemptions</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Matricule</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Motif</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date début</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date fin</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-800">
+                                @foreach($exemptions as $exemption)
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                            {{ $exemption->matricule }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                            {{ $exemption->motif }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                            {{ $exemption->date_debut }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                            {{ $exemption->date_fin }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-      </div>
+        </div>
+    </div>
 </x-infermerie>

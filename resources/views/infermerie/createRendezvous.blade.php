@@ -1,69 +1,96 @@
-<x-infermerie css='liste_rendezvous'>
-    <form action=""><div class="ordree" id="hidden-div">
-      <a href="#"><i class="fa-solid fa-x"></i></a>
-      <div class="contenu"><p>À: <div class="ordree01"><input type="text" name="" id=""></div></p><hr>
-    <p>Objet: <div class="ordree02"><input type="text" name="" id=""></div></p>
-    <hr>
-    <div class="ordree03">
-      <button>convocation par le psychologue</button>
-      <button>vaccin</button>
-      <button>presence secours</button>
-      <button>consultation</button>
+<x-infermerie css='createRendezvous'>
+    <div class="container mx-auto px-4 py-6">
+        <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Créer un rendez-vous</h2>
+
+                <form method="POST" action="{{ route('liste_rdv.store') }}" class="space-y-6">
+                    @csrf
+
+                    <!-- Matricule -->
+                    <div>
+                        <label for="matricule" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Matricule
+                        </label>
+                        <input type="text"
+                               id="matricule"
+                               name="matricule"
+                               value="{{ old('matricule') }}"
+                               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
+                               required>
+                        @error('matricule')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Motif -->
+                    <div>
+                        <label for="motif" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Motif
+                        </label>
+                        <select name="motif"
+                                id="motif"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
+                                required>
+                            <option value="">Sélectionnez un motif</option>
+                            <option value="consultation" {{ old('motif') == 'consultation' ? 'selected' : '' }}>
+                                Consultation
+                            </option>
+                            <option value="urgences" {{ old('motif') == 'urgences' ? 'selected' : '' }}>
+                                Urgences
+                            </option>
+                        </select>
+                        @error('motif')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Service -->
+                    <div>
+                        <label for="service" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Service
+                        </label>
+                        <select name="service"
+                                id="service"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
+                                required>
+                            <option value="">Sélectionnez un service</option>
+                            @foreach($services as $value => $label)
+                                <option value="{{ $value }}" {{ old('service') == $value ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('service')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Date -->
+                    <div>
+                        <label for="date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Date et heure
+                        </label>
+                        <input type="datetime-local"
+                               id="date"
+                               name="date"
+                               value="{{ old('date') }}"
+                               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
+                               required>
+                        @error('date')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end">
+                        <button type="submit"
+                                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600">
+                            Créer le rendez-vous
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    </div>
-      <div class="envoi">
-       <button type="submit"> <i class="fa-solid fa-paper-plane"></i></button><input type="text" class="envoi_input">
-      </div>
-    </div></form>
-
-
-      <div class="parent">
-            <form method="post" action="traitement.php" class="recherch">
-
-          <div >
-
-             <label for="matricule" > matricule</label>
-
-
-             <input type="number" id="matricule" name="matricule">
-
-
-
-
-            <label for="motif">motif</label>
-
-
-            <select name="motif" id="motif">
-             <option value="">consultation</option>
-             <option value="">urgences</option>
-
-            </select>
-
-                <label for="service">Service médical :</label>
-<select name="service" id="service">
-    <option value="medecine_generale">Médecine Générale</option>
-    <option value="cardiologie">Cardiologie</option>
-    <option value="pneumologie">Pneumologie</option>
-    <option value="gastroenterologie">Gastro-entérologie</option>
-    <option value="chirurgie_generale">Chirurgie Générale</option>
-    <option value="orthopedie">Orthopédie</option>
-    <option value="neurologie">Neurologie</option>
-    <option value="dermatologie">Dermatologie</option>
-    <option value="gynecologie">Gynécologie</option>
-    <option value="urologie">Urologie</option>
-    <option value="ophtalmologie">Ophtalmologie</option>
-    <option value="orl">ORL (Oto-Rhino-Laryngologie)</option>
-    <option value="psychiatrie">Psychiatrie</option>
-    <option value="radiologie">Radiologie</option>
-    <option value="anesthesie">Anesthésie</option>
-    <option value="reanimation">Réanimation</option>
-</select>
-<label for="date" class="moodifier" >date</label>
-
-
-
-<input  type="date" id="date" name="date">
-
-
-
 </x-infermerie>

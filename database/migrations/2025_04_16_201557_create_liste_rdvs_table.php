@@ -10,25 +10,20 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('liste_rdvs', function (Blueprint $table) {
-        // Matricule = clé primaire, 5 chiffres
-        $table->integer('matricule')->primary();
+    {
+        Schema::create('liste_rdvs', function (Blueprint $table) {
+            $table->integer('matricule',7);  // Utiliser 'string' si 'matricule' est une chaîne
+            $table->enum('motif', ['consultation', 'urgences']);
+            $table->string('service');
+            $table->dateTime('date');
+            $table->timestamps();
 
-        // Motif : enum limité à deux valeurs
-        $table->enum('motif', ['consultation', 'urgences']);
-
-        // Service : chaîne (depuis la liste)
-        $table->string('service');
-
-        // Date du rendez-vous
-        $table->date('date');
-
-        // Timestamps Laravel
-        $table->timestamps();
-    });
-}
-
+            $table->foreign('matricule')
+                  ->references('matricule')
+                  ->on('eleves')
+                  ->onDelete('cascade');
+        });
+    }
 
     /**
      * Reverse the migrations.

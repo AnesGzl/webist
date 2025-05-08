@@ -1,66 +1,44 @@
 <?php
-
+// app/Http/Controllers/AuthController.php
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showLoginForm()
+    public function index()
     {
-        return view('login'); // A single login page for all users
+        return view('infermerie.login');
     }
 
     public function login(Request $request)
-
     {
-
-        // dd($request->input('password'));
-
-
-
+        // Valide les champs
         $credentials = $request->validate([
-            'id' => ['required'],
-            'password' => ['required', 'min:8'],
+            'username' => ['required', 'string', 'exists:users,username'],
+            'password' => ['required'],
         ]);
-        // dd($credentials);
 
-        // dd(Auth::guard('officer')->attempt($credentials));
-        // s
+        // Utilise le guard par défaut (web)
+        if (Auth::attempt($credentials)) {  // Utilisation de Auth::attempt sans spécifier de guard
+            $request->session()->regenerate();
 
-
-
-
-        if ($credentials['id'] < 2000000) {
-            if (Auth::guard('officer')->attempt($credentials,true)) {
-
-                $officer = Auth::guard('officer')->user();
-
-                request()->session()->regenerate();
-                return redirect()->route('principale', $officer->id);
-            }
-        } else {
-
-            // Try logging in as a student
-            if (Auth::guard('student')->attempt($credentials, true)) {
-
-                return redirect()->route('posts.index');
-            }
+            // Redirection vers la route nommée "compt"
+            return redirect()->route('liste_convoncu');
         }
 
-        // return back()->withInput($request->only('id', 'password'));
-        return 1;
+        return back()
+            ->withErrors(['username' => 'Identifiants incorrects.'])
+            ->withInput($request->except('password'));
     }
 
     public function logout(Request $request)
     {
+        Auth::logout();  // Utilisation de Auth::logout() sans spécifier de guard
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        Auth::guard('officer')->logout();
-        Auth::guard('student')->logout();
-
-        return redirect()->route("showLoginForm");
+        return redirect()->route('login');
     }
 }
