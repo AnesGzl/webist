@@ -23,7 +23,7 @@
         </div>
 
         <div class="evo">
-            <form method="POST" action="/fiche/{{ $eleve->matricule }}">
+            <form method="POST" action="{{ route('fiche.update', $convoncu->id) }}">
                 @csrf
                 @method('PUT')
 

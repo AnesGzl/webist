@@ -40,5 +40,5 @@ class Eleve extends Model
      *
      * @var string
      */
-    protected $keyType = 'string';
+    protected $keyType = 'integer';
 }

@@ -11,10 +11,10 @@ class FicheController extends Controller
     /**
      * Display the specified student's file.
      */
-    public function show($matricule)
-    {
-        $eleve = Eleve::where('matricule', $matricule)->firstOrFail();
-        $convoncu = Convoncu::where('matricule', $matricule)->first();
+    public function show($id)
+    {   $convoncu = Convoncu::where('id', $id)->first();
+
+        $eleve = Eleve::where('matricule', $convoncu->matricule)->firstOrFail();
 
         return view('infermerie.fiche', compact('eleve', 'convoncu'));
     }
@@ -22,20 +22,18 @@ class FicheController extends Controller
     /**
      * Update the specified student's file.
      */
-    public function update(Request $request, $matricule)
+          public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'section' => 'required|string|max:255',
-            // Add other fields as needed
+            'psy' => 'required|string',
+            'medGen' => 'required|string',
+            'chirDent' => 'required|string',
+            'avisSpe' => 'required|string',
         ]);
 
-        $eleve = Eleve::where('matricule', $matricule)
-            ->firstOrFail();
+        $convoncu = Convoncu::where('id', $id)->firstOrFail();
+        $convoncu->update($validated);
 
-        $eleve->update($validated);
-
-        return redirect()->back()->with('success', 'Fiche mise à jour avec succès');
+        return redirect()->route('liste_convoncu')->with('success', 'Fiche médicale mise à jour avec succès');
     }
 }

@@ -10,7 +10,7 @@ class Convoncu extends Model
     use HasFactory;
     protected $table = 'convoncus';
     public $timestamps = true;
-    public $incrementing = false;
+    public $incrementing = true;
     protected $fillable = [
         'matricule',
         'psy',

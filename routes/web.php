@@ -20,8 +20,17 @@ Route::get('/infermerie/compt', fn() => view('infermerie.compt'))
 Route::get('/infermerie/liste_convoncu', [ConvoncuController::class, 'show'])
     ->name('liste_convoncu')->middleware('auth');
 
+// Ajoutez ou vérifiez ces routes dans routes/web.php
+Route::get('/recherche-etudiant', [ConvoncuController::class, 'recherche'])
+->name('recherche_etudiant')->middleware('auth');
+
+
 Route::get('/infermerie/CreateRendezvous', [ListeRdvController::class, 'create'])
     ->name('liste_rdv.create')->middleware('auth');
+
+
+
+
 
 Route::get('/infermerie/listeRendezvous', [ListeRdvController::class, 'index'])
     ->name('liste_rdv.index')->middleware('auth');
@@ -47,10 +56,10 @@ Route::get('/infermerie/liste_patient', [PatientController::class, 'index'])
 Route::post('/patients/{id}/valider', [PatientController::class, 'valider'])
     ->name('patients.valider')->middleware('auth');
 
-Route::get('/fiche/{matricule}', [FicheController::class, 'show'])
+Route::get('/fiche/{id}', [FicheController::class, 'show'])
     ->name('fiche.show')->middleware('auth');
 
-Route::put('/fiche/{matricule}', [ConvoncuController::class, 'update'])
+Route::put('/fiche/{id}', [FicheController::class, 'update'])
     ->name('fiche.update')->middleware('auth');
 
 
