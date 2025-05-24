@@ -1,3 +1,4 @@
+/*
 document.addEventListener("DOMContentLoaded", () => {
     const notifToggle = document.getElementById('notifToggle');
     const notifBox = document.getElementById('notifBox');
@@ -40,3 +41,4 @@ document.addEventListener('click', function(event) {
     }
 });
 
+*/

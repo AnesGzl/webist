@@ -25,4 +25,5 @@ class Convoncu extends Model
     {
         return $this->belongsTo(Eleve::class, 'matricule', 'matricule');
     }
+    
 }

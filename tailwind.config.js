@@ -12,7 +12,7 @@ export default {
         './resources/**/*.vue',
         './public/css/*.css',
     ],
-    darkMode: 'class',
+    darkMode: 'class', // Activation du mode sombre
     theme: {
         extend: {
             fontFamily: {

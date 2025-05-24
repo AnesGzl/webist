@@ -1,32 +1,32 @@
 @props(['css'])
 <!DOCTYPE html>
-<html lang="en" class="h-full" x-data :class="{ 'dark': localStorage.getItem('color-theme') === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches) }">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
-
-<!-- Ajoutez ceci dans la section head de votre layout ou vue -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
     <link rel="shortcut icon" href="/logo.png">
     <title>wibist:{{$css}}</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/'.$css.'.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
 
-    <!-- Theme initialization -->
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/theme.js'])
+
+    <!-- Dark mode script -->
     <script>
-        if (localStorage.getItem('color-theme') === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
+        // Pour éviter le flash du mauvais thème
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
         }
     </script>
 
-    <!-- Styles -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
-    <link rel="stylesheet" href="/css/{{$css}}.css">
-
-    <!-- Scripts -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="{{ asset('js/theme.js') }}" defer></script>
+    @livewireStyles
 </head>
 <body class="h-full bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <div class="min-h-screen flex">
@@ -43,7 +43,7 @@
 
         <!-- Main Content -->
         <div class="ml-64 flex-1">
-            <!-- Top Navigation -->
+            <!-- Header -->
             <header class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 h-16 fixed w-full z-20 transition-colors duration-200">
                 @include('components.header')
             </header>
@@ -53,7 +53,7 @@
                 <!-- Flash Messages -->
                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
                     @if(session('success'))
-                        <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 dark:bg-green-900/20 dark:text-green-300 transition-colors duration-200" role="alert">
+                        <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 dark:bg-green-900/20 dark:text-green-300">
                             <div class="flex items-center">
                                 <div class="py-1">
                                     <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -67,7 +67,7 @@
 
                     @if($errors->any())
                         @foreach($errors->all() as $error)
-                            <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 dark:bg-red-900/20 dark:text-red-300 transition-colors duration-200" role="alert">
+                            <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 dark:bg-red-900/20 dark:text-red-300">
                                 <div class="flex items-center">
                                     <div class="py-1">
                                         <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,5 +85,6 @@
             </main>
         </div>
     </div>
+    @livewireScripts
 </body>
 </html>

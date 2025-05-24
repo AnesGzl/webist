@@ -5,81 +5,35 @@ namespace App\Http\Controllers;
 use App\Models\Convoncu;
 use App\Models\Eleve;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class ConvoncuController extends Controller
 {
     public function show(Request $request)
+{
+    $convoncus = Convoncu::whereNull('psy')
+        ->join('eleves', 'convoncus.matricule', '=', 'eleves.matricule')
+        ->select('convoncus.*', 'eleves.nom', 'eleves.prenom', 'eleves.section')
+        ->orderBy('convoncus.created_at', 'desc')
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('infermerie.liste_convoncu', compact('convoncus'));
+}
+
+
+    public function update(Request $request, $id)
     {
-        // Si c'est une requête AJAX pour la recherche instantanée
-        if ($request->ajax() && $request->has('search')) {
-            try {
-                $search = $request->input('search');
-                Log::info('Recherche AJAX pour: ' . $search);
+        $validated = $request->validate([
+            'psy' => 'required|string',
+            'medGen' => 'required|string',
+            'chirDent' => 'required|string',
+            'avisSpe' => 'required|string',
+        ]);
 
-                $etudiants = Eleve::where('matricule', 'like', "%{$search}%")
-                    ->orWhere('nom', 'like', "%{$search}%")
-                    ->orWhere('prenom', 'like', "%{$search}%")
-                    ->select('id', 'matricule', 'nom', 'prenom', 'section')
-                    ->limit(20)
-                    ->get();
+        $convoncu = Convoncu::where('id', $id)->firstOrFail();
+            $convoncu->update($validated);
 
-                return response()->json($etudiants);
-            } catch (\Exception $e) {
-                Log::error('Erreur lors de la recherche d\'étudiants: ' . $e->getMessage());
-                return response()->json(['error' => 'Erreur lors de la recherche: ' . $e->getMessage()], 500);
-            }
-        }
-
-        // Sinon, afficher la liste normale
-        try {
-            $convoncus = Convoncu::whereNull('psy')
-                ->join('eleves', 'convoncus.matricule', '=', 'eleves.matricule')
-                ->select('convoncus.*', 'eleves.nom', 'eleves.prenom', 'eleves.section', 'eleves.id')
-                ->orderBy('convoncus.created_at', 'desc')
-                ->paginate(10)
-                ->withQueryString();
-
-            return view('infermerie.liste_convoncu', compact('convoncus'));
-        } catch (\Exception $e) {
-            Log::error('Erreur lors de l\'affichage de la liste des convoqués: ' . $e->getMessage());
-            return view('infermerie.liste_convoncu')->withErrors(['error' => 'Une erreur est survenue lors du chargement des données.']);
-        }
-    }
-
-    public function recherche(Request $request)
-    {
-        try {
-            $search = $request->input('search');
-            Log::info('Recherche pour: ' . $search);
-
-            $query = Eleve::query();
-
-            if ($search) {
-                $query->where('matricule', 'like', "%{$search}%")
-                      ->orWhere('nom', 'like', "%{$search}%")
-                      ->orWhere('prenom', 'like', "%{$search}%");
-            }
-
-            $etudiants = $query->select('id', 'matricule', 'nom', 'prenom', 'section')
-                               ->limit(20)
-                               ->get();
-
-            // Si c'est une requête AJAX, retourner les données en JSON
-            if ($request->ajax()) {
-                return response()->json($etudiants);
-            }
-
-            // Sinon, retourner la vue complète
-            return view('infermerie.liste_convoncu', compact('etudiants'));
-        } catch (\Exception $e) {
-            Log::error('Erreur lors de la recherche: ' . $e->getMessage());
-
-            if ($request->ajax()) {
-                return response()->json(['error' => 'Erreur lors de la recherche: ' . $e->getMessage()], 500);
-            }
-
-            return back()->withErrors(['error' => 'Une erreur est survenue lors de la recherche.']);
-        }
+        return redirect()->route('liste_convoncu')->with('success', 'Fiche médicale mise à jour avec succès');
     }
 }
+

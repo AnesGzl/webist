@@ -20,9 +20,6 @@ Route::get('/infermerie/compt', fn() => view('infermerie.compt'))
 Route::get('/infermerie/liste_convoncu', [ConvoncuController::class, 'show'])
     ->name('liste_convoncu')->middleware('auth');
 
-// Ajoutez ou vérifiez ces routes dans routes/web.php
-Route::get('/recherche-etudiant', [ConvoncuController::class, 'recherche'])
-->name('recherche_etudiant')->middleware('auth');
 
 
 Route::get('/infermerie/CreateRendezvous', [ListeRdvController::class, 'create'])
